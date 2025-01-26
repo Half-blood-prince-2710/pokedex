@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"time"
 )
 
 func commandExit(cfg *config) error {
@@ -34,8 +35,8 @@ func commandMap(cfg *config) error {
 	}
 	
 	// Try getting the response from the cache
-	resp, bool := cache.Get(url)
-	if !bool { // If the response is not in cache, fetch it from the API
+	resp, found := cache.Get(url)
+	if !found { // If the response is not in cache, fetch it from the API
 		fmt.Println("Fetching data from URL:", url) // Indicate fetching from URL
 		res, err := http.Get(url)
 		if err != nil {
@@ -98,8 +99,8 @@ func commandMapBack(cfg *config) error {
 	} else {
 		url = cfg.Previous
 	}
-	resp, bool := cache.Get(url)
-	if bool == false {
+	resp, found := cache.Get(url)
+	if found == false {
 		fmt.Println("Fetching data from URL:", url) 
 		res, err := http.Get(url)
 		// fmt.Print(res,"\n")
@@ -151,8 +152,8 @@ func commandExplore(cfg *config) error {
 	var url string
 	var resp []byte
 	url = fmt.Sprint("https://pokeapi.co/api/v2/location-area/",cfg.Location)
-	resp,bool :=cache.Get(url)
-	if !bool {
+	resp,found :=cache.Get(url)
+	if !found {
 		
 		res,err := http.Get(url)
 		
@@ -190,10 +191,12 @@ func commandExplore(cfg *config) error {
 }
 
 func commandCatch(cfg *config) error {
+	rand.Seed(time.Now().UnixNano())
 	fmt.Print("Throwing a Pokeball at",cfg.Pokemon,"...\n")
 	url := fmt.Sprint("https://pokeapi.co/api/v2/pokemon/",cfg.Pokemon,"/")
-	resp,bool :=cache.Get(url)
-	if !bool {
+	fmt.Print("url ",url ,"\n")
+	resp,found :=cache.Get(url)
+	if !found {
 		
 		res,err := http.Get(url)
 		
@@ -206,14 +209,17 @@ func commandCatch(cfg *config) error {
 		cache.Add(url,resp)
 	}
 	var input struct {
-		Base_Experience int `json"base_experience"`
+		Name string `json="name"`
+		Base_Experience int `json="base_experience"`
 	}
 	err:=json.Unmarshal(resp,&input)
 	if err!=nil {
 		
 		fmt.Print("Error Unmarshaling data : ",err,"\n")
 	}
-	if rand.Intn(2*input.Base_Experience) > input.Base_Experience {
+	fmt.Print(input.Base_Experience," name: ",input.Name,"\n")
+	val := rand.Intn(2*input.Base_Experience)
+	if  val > input.Base_Experience {
 		fmt.Print(cfg.Pokemon," was caught!\n")
 		cfg.Pokedex[url] = Pokemon{Name: cfg.Pokemon}
 	}else {

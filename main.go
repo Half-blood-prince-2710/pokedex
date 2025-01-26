@@ -95,7 +95,9 @@ func main() {
 			if cmd.name == "explore" || cmd.name=="catch" {
 
 				if len(out) > 1 {
-					cfg.Location = out[1]
+					if cmd.name == "explore"{cfg.Location = out[1]}
+					if cmd.name == "catch" {cfg.Pokemon = out[1]}
+					
 				} else {
 					fmt.Print("Incorrect Command!. Please Type 'help' to see available commands\n")
 				}
