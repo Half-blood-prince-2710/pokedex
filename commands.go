@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"math/rand"
 	"net/http"
 	"os"
 )
@@ -185,5 +186,38 @@ func commandExplore(cfg *config) error {
 	}
 
 
+	return nil
+}
+
+func commandCatch(cfg *config) error {
+	fmt.Print("Throwing a Pokeball at",cfg.Pokemon,"...\n")
+	url := fmt.Sprint("https://pokeapi.co/api/v2/pokemon/",cfg.Pokemon,"/")
+	resp,bool :=cache.Get(url)
+	if !bool {
+		
+		res,err := http.Get(url)
+		
+		if err!=nil {
+			fmt.Print("Error fetching data: ",err)
+			return nil
+		}
+		defer res.Body.Close()
+		resp,err=io.ReadAll(res.Body)
+		cache.Add(url,resp)
+	}
+	var input struct {
+		Base_Experience int `json"base_experience"`
+	}
+	err:=json.Unmarshal(resp,&input)
+	if err!=nil {
+		
+		fmt.Print("Error Unmarshaling data : ",err,"\n")
+	}
+	if rand.Intn(2*input.Base_Experience) > input.Base_Experience {
+		fmt.Print(cfg.Pokemon," was caught!\n")
+		cfg.Pokedex[url] = Pokemon{Name: cfg.Pokemon}
+	}else {
+		fmt.Print(cfg.Pokemon," escaped!\n")
+	}
 	return nil
 }

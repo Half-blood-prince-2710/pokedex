@@ -2,9 +2,9 @@ package main
 
 import (
 	"bufio"
-	
+
 	"fmt"
-	
+
 	"os"
 	"strings"
 	"time"
@@ -21,10 +21,16 @@ type config struct {
 	Next     string
 	Previous string
 	Location string
+	Pokemon  string
+	Pokedex map[string]Pokemon
+}
+type Pokemon struct {
+	Name string
 }
 
 var mp map[string]cliCommand
 var cache *pokecache.Cache
+var pokedex map[string]Pokemon
 
 func cleanInput(text string) []string {
 
@@ -35,8 +41,6 @@ func cleanInput(text string) []string {
 	return nil
 
 }
-
-
 
 func main() {
 	mp = map[string]cliCommand{
@@ -60,29 +64,37 @@ func main() {
 			description: "Go to previous location areas",
 			callback:    commandMapBack,
 		},
-		"explore":{
-			name:"explore",
-			description :"List of all the pokemon located here",
-			callback: commandExplore,
+		"explore": {
+			name:        "explore",
+			description: "List of all the pokemon located here",
+			callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch",
+			description: "To catch your favourite Pokemon",
+			callback:   commandCatch,
 		},
 	}
-	cfg := &config{}
+	pokedex := map[string]Pokemon{}
+	cfg := &config{Pokedex: pokedex,}
 
-	cache = pokecache.NewCache(time.Second*10)
+	
+
+	cache = pokecache.NewCache(time.Second * 10)
 	sc := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("Pokedex > ")
 		sc.Scan()
 		str := sc.Text()
 		out := cleanInput(str)
-		if len(out)==0 {
+		if len(out) == 0 {
 			fmt.Print("Please Enter Command.  Type 'help' to see available commands\n")
 		}
-		
-		if cmd, exists := mp[out[0]]; exists {
-			if cmd.name == "explore" {
 
-				if len(out)>1{
+		if cmd, exists := mp[out[0]]; exists {
+			if cmd.name == "explore" || cmd.name=="catch" {
+
+				if len(out) > 1 {
 					cfg.Location = out[1]
 				} else {
 					fmt.Print("Incorrect Command!. Please Type 'help' to see available commands\n")
