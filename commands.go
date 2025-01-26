@@ -223,12 +223,13 @@ func commandCatch(cfg *config) error {
 		fmt.Print("Error Unmarshaling data : ",err,"\n")
 	}
 	
-	val := rand.Intn(2*Input.BaseExperience)
-	fmt.Print(Input.BaseExperience,"rand: ",val,"\n")
+	val := rand.Intn(3*Input.BaseExperience)
+	// fmt.Print(Input.BaseExperience,"rand: ",val,"\n")
 	if  val > Input.BaseExperience {
 		fmt.Print(cfg.Pokemon," was caught!\n")
 		
 		cfg.Pokedex[cfg.Pokemon] = Input
+		fmt.Print("You may now inspect it with the inspect command.\n")
 		// fmt.Printf("Updated Pokedex: %+v\n", cfg.Pokedex) // Debugging Pokedex content
 	}else {
 		fmt.Print(cfg.Pokemon," escaped!\n")
@@ -254,6 +255,15 @@ func commandInspect(cfg *config) error {
 		for _, t := range val.Types {
 			fmt.Printf("  %s\n", t.Type.Name)
 		}
+	}
+	return nil
+}
+
+
+func commandPokedex(cfg *config) error {
+	fmt.Print("Your Pokedex:\n")
+	for key,_:= range cfg.Pokedex {
+		fmt.Print("- ",key,"\n")
 	}
 	return nil
 }

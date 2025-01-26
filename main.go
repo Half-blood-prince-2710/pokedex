@@ -36,7 +36,7 @@ func main() {
 		},
 		"help": {
 			name:        "help",
-			description: "print message for pokedex",
+			description: "Print message for pokedex",
 			callback:    commandHelp,
 		},
 		"map": {
@@ -45,24 +45,29 @@ func main() {
 			callback:    commandMap,
 		},
 		"mapb": {
-			name:        "map",
-			description: "Go to previous location areas",
+			name:        "mapb",
+			description: "Go back to previous location areas",
 			callback:    commandMapBack,
 		},
 		"explore": {
 			name:        "explore",
-			description: "List of all the pokemon located here",
+			description: "List of all the pokemon located here. cmd:'explore location_name'",
 			callback:    commandExplore,
 		},
 		"catch": {
 			name:        "catch",
-			description: "To catch your favourite Pokemon",
+			description: "To catch your favourite Pokemon. cmd:'catch pokemon_name'",
 			callback:    commandCatch,
 		},
 		"inspect": {
 			name:"inspect",
-			description: "Details of Pokemon",
+			description: "Details of Pokemon. cmd:'inspect pokemon_name'",
 			callback: commandInspect,
+		},
+		"pokedex":{
+			name :"pokedex",
+			description: "List of caught Pokemon",
+			callback: commandPokedex,
 		},
 	}
 	pokedex := map[string]Pokemon{}
@@ -80,7 +85,7 @@ func main() {
 		}
 
 		if cmd, exists := mp[out[0]]; exists {
-			if cmd.name == "explore" || cmd.name == "catch" {
+			if cmd.name == "explore" || cmd.name == "catch" || cmd.name=="inspect" {
 
 				if len(out) > 1 {
 					if cmd.name == "explore" {
