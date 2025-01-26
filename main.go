@@ -12,21 +12,6 @@ import (
 	"github.com/half-blood-prince-2710/pokedex/internal/pokecache"
 )
 
-type cliCommand struct {
-	name        string
-	description string
-	callback    func(*config) error
-}
-type config struct {
-	Next     string
-	Previous string
-	Location string
-	Pokemon  string
-	Pokedex  map[string]Pokemon
-}
-type Pokemon struct {
-	Name string
-}
 
 var mp map[string]cliCommand
 var cache *pokecache.Cache

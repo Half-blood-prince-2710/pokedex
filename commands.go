@@ -216,21 +216,18 @@ func commandCatch(cfg *config) error {
 		resp,err=io.ReadAll(res.Body)
 		cache.Add(url,resp)
 	}
-	var input struct {
-		Name string `json="name"`
-		Base_Experience int `json="base_experience"`
-	}
-	err:=json.Unmarshal(resp,&input)
+	var Input Pokemon
+	err:=json.Unmarshal(resp,&Input)
 	if err!=nil {
 		
 		fmt.Print("Error Unmarshaling data : ",err,"\n")
 	}
 	
-	val := rand.Intn(2*input.Base_Experience)
-	// fmt.Print(input.Base_Experience," name: ",input.Name,"rand: ",val,"\n")
-	if  val > input.Base_Experience {
+	val := rand.Intn(2*Input.BaseExperience)
+	// fmt.Print(Input.BaseExperience," name: ",Input.Name,"rand: ",val,"\n")
+	if  val > Input.BaseExperience {
 		fmt.Print(cfg.Pokemon," was caught!\n")
-		cfg.Pokedex[url] = Pokemon{Name: cfg.Pokemon}
+		cfg.Pokedex[url] = Input
 	}else {
 		fmt.Print(cfg.Pokemon," escaped!\n")
 	}
