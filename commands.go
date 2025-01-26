@@ -192,9 +192,9 @@ func commandExplore(cfg *config) error {
 
 func commandCatch(cfg *config) error {
 	rand.Seed(time.Now().UnixNano())
-	fmt.Print("Throwing a Pokeball at",cfg.Pokemon,"...\n")
+	fmt.Print("Throwing a Pokeball at  ",cfg.Pokemon,"...\n")
 	url := fmt.Sprint("https://pokeapi.co/api/v2/pokemon/",cfg.Pokemon,"/")
-	fmt.Print("url ",url ,"\n")
+	// fmt.Print("url ",url ,"\n")
 	resp,found :=cache.Get(url)
 	if !found {
 		
@@ -205,6 +205,10 @@ func commandCatch(cfg *config) error {
 			return nil
 		}
 		defer res.Body.Close()
+		if res.StatusCode == 404 {
+			fmt.Print("Warning! Warning! Warning! Please Enter a valid Pokemon Name !, Otherwise I will caught you XD\n")
+			return nil
+		}
 		resp,err=io.ReadAll(res.Body)
 		cache.Add(url,resp)
 	}
@@ -217,8 +221,9 @@ func commandCatch(cfg *config) error {
 		
 		fmt.Print("Error Unmarshaling data : ",err,"\n")
 	}
-	fmt.Print(input.Base_Experience," name: ",input.Name,"\n")
+	
 	val := rand.Intn(2*input.Base_Experience)
+	fmt.Print(input.Base_Experience," name: ",input.Name,"rand: ",val,"\n")
 	if  val > input.Base_Experience {
 		fmt.Print(cfg.Pokemon," was caught!\n")
 		cfg.Pokedex[url] = Pokemon{Name: cfg.Pokemon}

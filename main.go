@@ -22,7 +22,7 @@ type config struct {
 	Previous string
 	Location string
 	Pokemon  string
-	Pokedex map[string]Pokemon
+	Pokedex  map[string]Pokemon
 }
 type Pokemon struct {
 	Name string
@@ -72,13 +72,11 @@ func main() {
 		"catch": {
 			name:        "catch",
 			description: "To catch your favourite Pokemon",
-			callback:   commandCatch,
+			callback:    commandCatch,
 		},
 	}
 	pokedex := map[string]Pokemon{}
-	cfg := &config{Pokedex: pokedex,}
-
-	
+	cfg := &config{Pokedex: pokedex}
 
 	cache = pokecache.NewCache(time.Second * 10)
 	sc := bufio.NewScanner(os.Stdin)
@@ -92,19 +90,23 @@ func main() {
 		}
 
 		if cmd, exists := mp[out[0]]; exists {
-			if cmd.name == "explore" || cmd.name=="catch" {
+			if cmd.name == "explore" || cmd.name == "catch" {
 
 				if len(out) > 1 {
-					if cmd.name == "explore"{cfg.Location = out[1]}
-					if cmd.name == "catch" {cfg.Pokemon = out[1]}
-					
+					if cmd.name == "explore" {
+						cfg.Location = out[1]
+					}
+					if cmd.name == "catch" {
+						cfg.Pokemon = out[1]
+					}
+					if err := cmd.callback(cfg); err != nil {
+						fmt.Print("Error: ", err, "\n")
+					}
 				} else {
 					fmt.Print("Incorrect Command!. Please Type 'help' to see available commands\n")
 				}
 			}
-			if err := cmd.callback(cfg); err != nil {
-				fmt.Print("Error: ", err, "\n")
-			}
+
 		} else {
 			fmt.Print("Unknown Command. Type 'help' to see available commands\n")
 		}
