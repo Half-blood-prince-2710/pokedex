@@ -99,13 +99,16 @@ func main() {
 					if cmd.name == "catch" {
 						cfg.Pokemon = out[1]
 					}
-					if err := cmd.callback(cfg); err != nil {
-						fmt.Print("Error: ", err, "\n")
-					}
+					
 				} else {
 					fmt.Print("Incorrect Command!. Please Type 'help' to see available commands\n")
+					continue
 				}
+
 			}
+			if err := cmd.callback(cfg); err != nil {
+						fmt.Print("Error: ", err, "\n")
+					}
 
 		} else {
 			fmt.Print("Unknown Command. Type 'help' to see available commands\n")

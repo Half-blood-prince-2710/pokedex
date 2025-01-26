@@ -196,7 +196,7 @@ func commandExplore(cfg *config) error {
 
 func commandCatch(cfg *config) error {
 	// rand.Seed(time.Now().UnixNano())
-	fmt.Print("Throwing a Pokeball at  ",cfg.Pokemon,"...\n")
+	fmt.Print("Throwing a Pokeball at ",cfg.Pokemon,"...\n")
 	url := fmt.Sprint("https://pokeapi.co/api/v2/pokemon/",cfg.Pokemon,"/")
 	// fmt.Print("url ",url ,"\n")
 	resp,found :=cache.Get(url)
@@ -227,7 +227,7 @@ func commandCatch(cfg *config) error {
 	}
 	
 	val := rand.Intn(2*input.Base_Experience)
-	fmt.Print(input.Base_Experience," name: ",input.Name,"rand: ",val,"\n")
+	// fmt.Print(input.Base_Experience," name: ",input.Name,"rand: ",val,"\n")
 	if  val > input.Base_Experience {
 		fmt.Print(cfg.Pokemon," was caught!\n")
 		cfg.Pokedex[url] = Pokemon{Name: cfg.Pokemon}
