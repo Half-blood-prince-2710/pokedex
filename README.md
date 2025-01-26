@@ -22,8 +22,8 @@ A **Pokédex CLI** is a command-line tool written in Go, designed to help you ex
 ### Steps
 1. Clone the repository:  
    ```bash  
-   git clone https://github.com/half-blood-prince-2710/pokedex-cli.git  
-   cd pokedex-cli  
+   git clone https://github.com/half-blood-prince-2710/pokedex.git  
+   cd pokedex
    ```  
 
 2. Install dependencies:  
