@@ -7,7 +7,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
-	"time"
+	
 )
 
 func commandExit(cfg *config) error {
@@ -162,6 +162,10 @@ func commandExplore(cfg *config) error {
 			return nil
 		}
 		defer res.Body.Close()
+		if res.StatusCode == 404 {
+			fmt.Print("Warning! Warning! Warning! Please Enter a valid Location Name !, Otherwise I will Kick you XD\n")
+			return nil
+		}
 		resp,err=io.ReadAll(res.Body)
 		cache.Add(url,resp)
 	}
@@ -191,7 +195,7 @@ func commandExplore(cfg *config) error {
 }
 
 func commandCatch(cfg *config) error {
-	rand.Seed(time.Now().UnixNano())
+	// rand.Seed(time.Now().UnixNano())
 	fmt.Print("Throwing a Pokeball at  ",cfg.Pokemon,"...\n")
 	url := fmt.Sprint("https://pokeapi.co/api/v2/pokemon/",cfg.Pokemon,"/")
 	// fmt.Print("url ",url ,"\n")
