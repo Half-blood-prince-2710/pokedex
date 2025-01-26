@@ -154,6 +154,7 @@ func commandExplore(cfg *config) error {
 	if !bool {
 		
 		res,err := http.Get(url)
+		
 		if err!=nil {
 			fmt.Print("Error fetching data: ",err)
 			return nil
@@ -162,6 +163,7 @@ func commandExplore(cfg *config) error {
 		resp,err=io.ReadAll(res.Body)
 		cache.Add(url,resp)
 	}
+	// fmt.Print("res",resp,"\n\n")
 	type Pokemon struct {
 		Name string `json:"name"`
 	}
@@ -175,7 +177,8 @@ func commandExplore(cfg *config) error {
 
 	err:=json.Unmarshal(resp,&PokemonList)
 	if err!=nil {
-		fmt.Print("Error Unmarshaling data : ",err)
+		
+		fmt.Print("Error Unmarshaling data : ",err,"\n")
 	}
 	for _,val := range PokemonList.PokemonEncounters {
 		fmt.Print(val.Pokemon.Name,"\n")

@@ -81,7 +81,12 @@ func main() {
 		
 		if cmd, exists := mp[out[0]]; exists {
 			if cmd.name == "explore" {
-				cfg.Location= out[1]
+
+				if len(out)>1{
+					cfg.Location = out[1]
+				} else {
+					fmt.Print("Incorrect Command!. Please Type 'help' to see available commands\n")
+				}
 			}
 			if err := cmd.callback(cfg); err != nil {
 				fmt.Print("Error: ", err, "\n")
