@@ -224,12 +224,36 @@ func commandCatch(cfg *config) error {
 	}
 	
 	val := rand.Intn(2*Input.BaseExperience)
-	// fmt.Print(Input.BaseExperience," name: ",Input.Name,"rand: ",val,"\n")
+	fmt.Print(Input.BaseExperience,"rand: ",val,"\n")
 	if  val > Input.BaseExperience {
 		fmt.Print(cfg.Pokemon," was caught!\n")
-		cfg.Pokedex[url] = Input
+		
+		cfg.Pokedex[cfg.Pokemon] = Input
+		// fmt.Printf("Updated Pokedex: %+v\n", cfg.Pokedex) // Debugging Pokedex content
 	}else {
 		fmt.Print(cfg.Pokemon," escaped!\n")
+	}
+	return nil
+}
+
+
+
+func commandInspect(cfg *config) error {
+	val, exists := cfg.Pokedex[cfg.Pokemon]
+	if !exists {
+		fmt.Print("You have not caught that Pokémon yet.\n")
+	} else {
+		// Printing the Pokémon's data in a readable format
+		fmt.Printf("Inspecting %s:\n", cfg.Pokemon)
+		fmt.Printf("Height: %d\n Weight: %d\n Base Experience: %d\n", val.Height, val.Weight, val.BaseExperience)
+		fmt.Println("Stats:")
+		for _, stat := range val.Stats {
+			fmt.Printf("  %s: BaseStat: %d, Effort: %d\n", stat.Stat.Name, stat.BaseStat, stat.Effort)
+		}
+		fmt.Println("Types:")
+		for _, t := range val.Types {
+			fmt.Printf("  %s\n", t.Type.Name)
+		}
 	}
 	return nil
 }

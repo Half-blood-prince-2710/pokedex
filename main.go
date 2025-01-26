@@ -59,6 +59,11 @@ func main() {
 			description: "To catch your favourite Pokemon",
 			callback:    commandCatch,
 		},
+		"inspect": {
+			name:"inspect",
+			description: "Details of Pokemon",
+			callback: commandInspect,
+		},
 	}
 	pokedex := map[string]Pokemon{}
 	cfg := &config{Pokedex: pokedex}
@@ -81,7 +86,7 @@ func main() {
 					if cmd.name == "explore" {
 						cfg.Location = out[1]
 					}
-					if cmd.name == "catch" {
+					if cmd.name == "catch" || cmd.name == "inspect" {
 						cfg.Pokemon = out[1]
 					}
 					
